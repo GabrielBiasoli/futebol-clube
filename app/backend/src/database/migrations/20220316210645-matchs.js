@@ -1,34 +1,32 @@
 'use strict';
 
-import { DataTypes, QueryInterface, Sequelize } from "sequelize/types";
-
 module.exports = {
-  up: async (queryInterface: QueryInterface, _Sequelize: Sequelize) => {
+  up: async (queryInterface, Sequelize) => {
     await queryInterface.createTable('matchs', {
       id: {
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,
-        type: DataTypes.STRING
+        type: Sequelize.STRING
       }, 
       homeTeam: {
-        type: DataTypes.INTEGER,
+        type: Sequelize.INTEGER,
       },
       homeTeamGoals: {
-        type: DataTypes.INTEGER,
+        type: Sequelize.INTEGER,
       },
       awayTeam: {
-        type: DataTypes.INTEGER,
+        type: Sequelize.INTEGER,
       },
       awayTeamGoals: {
-        type: DataTypes.INTEGER,
+        type: Sequelize.INTEGER,
       },
       inProgress: {
         type: DataTypes.BOOLEAN,
       },
     });
   },
-  down: async (queryInterface: QueryInterface, _Sequelize: Sequelize) => {
+  down: async (queryInterface, _Sequelize) => {
     await queryInterface.dropTable('matchs');
   }
 };
