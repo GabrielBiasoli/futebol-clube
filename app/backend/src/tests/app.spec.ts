@@ -3,43 +3,64 @@ import * as chai from 'chai';
 import chaiHttp = require('chai-http');
 
 import { app } from '../app';
-import { User }
-import Example from '../database/models/ExampleModel';
-
+import User from '../database/models/User'
 import { Response } from 'superagent';
 
 chai.use(chaiHttp);
 
 const { expect } = chai;
 
-describe('Seu teste', () => {
-  /**
-   * Exemplo do uso de stubs com tipos
-   */ 
+describe('Request POST method to route "/login"', async () => {
+  describe('when requested successfully', async () => {
+    let chaiHttpResponse: Response;
 
-  // let chaiHttpResponse: Response;
+    const loginReturn = {
+      "id": 1,
+      "username": "Admin",
+      "role": "admin",
+      "email": "admin@admin.com"  
+    }
 
-  // before(async () => {
-  //   sinon
-  //     .stub(Example, "findOne")
-  //     .resolves({
-  //       ...<Seu mock>
-  //     } as Example);
-  // });
+    before(async () => {
+      sinon
+        .stub(User, "findOne")
+        .resolves(loginReturn as User);
+    });
 
-  // after(()=>{
-  //   (Example.findOne as sinon.SinonStub).restore();
-  // })
+    after(()=>{
+      (User.findOne as sinon.SinonStub).restore();
+    })
 
-  // it('...', async () => {
-  //   chaiHttpResponse = await chai
-  //      .request(app)
-  //      ...
+    it('reponse body is an object ', async () => {
+      chaiHttpResponse = await chai
+          .request(app)
+          .post('/login');
 
-  //   expect(...)
-  // });
+      expect(chaiHttpResponse.body).to.be.an('object');
+    });
 
-  it('Seu sub-teste', () => {
-    expect(false).to.be.eq(true);
-  });
+    it('response body has properties "user" and "token" ', async () => {
+      chaiHttpResponse = await chai
+      .request(app)
+      .post('/login');
+
+      expect(chaiHttpResponse.body).to.have.all.keys('user', 'token');
+    });
+
+    it('"user" has properties "id", "username", "role" and "email" ', async () => {
+      chaiHttpResponse = await chai
+      .request(app)
+      .post('/login');
+
+      expect(chaiHttpResponse.body.user).to.have.all.keys('id', 'username', 'role', 'email');
+    });
+
+    it('"token" is a string', async () => {
+      chaiHttpResponse = await chai
+      .request(app)
+      .post('/login');
+
+      expect(chaiHttpResponse.body.token).to.be.a('string');
+    })
+  })
 });
