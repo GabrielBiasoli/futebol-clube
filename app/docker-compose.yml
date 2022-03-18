@@ -6,6 +6,8 @@ services:
     depends_on:
       backend:
         condition: service_healthy
+    ports:
+      - 3000:3000
     # Os `healthcheck` devem garantir que a aplicação
     # está operacional, antes de liberar o container
     healthcheck:
