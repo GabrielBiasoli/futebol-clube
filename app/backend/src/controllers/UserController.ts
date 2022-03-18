@@ -1,7 +1,7 @@
-import { Request, NextFunction, Response, RequestHandler } from 'express';
-import User from 'src/database/models/User';
 import * as jwt from 'jsonwebtoken';
-import * as UserService from '../services/UserService';
+import { Request, NextFunction, Response } from 'express';
+import User from '../database/models/User';
+import { UserService } from '../services/UserService';
 
 interface UserRequest extends Request {
   user: User
@@ -11,15 +11,15 @@ interface UserRequest extends Request {
 //   (req: UserRequest, res: Response, next: NextFunction): void
 // }
 
-// class UserController {
-//   UserService = UserService;
-// }
+export class UserController {
+  private _UserService = new UserService();
 
-export const login = async (req: UserRequest, _res: Response, next: NextFunction) => {
-  const user = await UserService.login(req.body);
-  req.user = user;
-  next();
-};
+  public async login(req: UserRequest, _res: Response, next: NextFunction) {
+    const user = await this._UserService.login(req.body);
+    req.user = user;
+    next();
+  }
+}
 
 export const generateToken = (req: UserRequest, res: Response, _next: NextFunction) => {
   const { user } = req;

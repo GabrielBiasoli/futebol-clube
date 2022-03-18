@@ -1,8 +1,11 @@
 import * as express from 'express';
-import cors from 'cors';
+import * as cors from 'cors';
+import { UserController } from './controllers/UserController';
 
 class App {
   public app: express.Express;
+
+  private _UserController = new UserController();
 
   constructor() {
     this.config();
@@ -22,7 +25,7 @@ class App {
   }
 
   private routes(): void {
-    this.app.post('/login');
+    this.app.post('/login', this._UserController.login);
   }
 
   // ...
