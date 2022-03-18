@@ -1,11 +1,13 @@
-FROM node:16-alpine AS build
+FROM node:16-alpine
 
-WORKDIR /usr/src/app
+WORKDIR /app
 
-COPY package.json package-lock.json ./
+COPY package*.json ./
 
 RUN npm install
 
 COPY . .
+
 EXPOSE 3001
-ENTRYPOINT ["npm", "start"]
+
+CMD ["npm", "start"]

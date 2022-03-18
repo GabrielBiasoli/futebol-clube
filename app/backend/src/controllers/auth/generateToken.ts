@@ -1,8 +1,8 @@
 import * as jwt from 'jsonwebtoken';
-import { Response, NextFunction } from 'express';
+import { Response, NextFunction, Request } from 'express';
 
-export const generateToken = (req: UserRequest, res: Response, _next: NextFunction) => {
-  const { user } = req;
+export const generateToken = (req: Request, res: Response, _next: NextFunction) => {
+  const { user } = req.body;
 
   const token = jwt.sign(user, 'secret');
 
