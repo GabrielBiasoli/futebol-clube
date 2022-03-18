@@ -17,9 +17,9 @@ export class UserService {
     const user = await this._UserModel
       .findOne({ ...returnOptions, where: { email, password } });
 
-    if (!user) throw new Error();
+    // if (!user) throw new Error();
 
-    return user;
+    return user || {};
   }
 }
 

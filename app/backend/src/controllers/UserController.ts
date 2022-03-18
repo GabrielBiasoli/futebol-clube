@@ -7,7 +7,7 @@ export class UserController {
   public async login(req: Request, _res: Response, next: NextFunction): Promise<void> {
     const user = await this._UserService.login(req.body);
     req.body.user = user;
-    return next();
+    next();
   }
 }
 
