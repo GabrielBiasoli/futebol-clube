@@ -1,16 +1,14 @@
 import * as express from 'express';
+import cors from 'cors';
 
 class App {
   public app: express.Express;
-  // ...
 
   constructor() {
-    // ...
     this.config();
-    // ...
   }
 
-  private config():void {
+  private config(): void {
     const accessControl: express.RequestHandler = (_req, res, next) => {
       res.header('Access-Control-Allow-Origin', '*');
       res.header('Access-Control-Allow-Methods', 'GET,POST,DELETE,OPTIONS,PUT');
@@ -19,11 +17,16 @@ class App {
     };
 
     this.app.use(accessControl);
-    // ...
+    this.app.use(cors());
+    this.app.use(express.json());
+  }
+
+  private routes(): void {
+    this.app.post('/login');
   }
 
   // ...
-  public start(PORT: string | number):void {
+  public start(PORT: string | number): void {
     this.app.listen(PORT, () => console.log(`Listening in port ${PORT}`));
   }
 }

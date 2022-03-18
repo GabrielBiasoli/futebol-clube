@@ -10,9 +10,15 @@ const returnOptions = {
   raw: true,
 };
 
-export const login = async ({ email, password }: Login) => {
-  const user = await User.findOne({ ...returnOptions, where: { email, password } });
-  return user;
-};
+export class UserService {
+  private _UserModel = User;
 
-export default login;
+  public async login({ email, password }: Login) {
+    const user = await this._UserModel
+      .findOne({ ...returnOptions, where: { email, password } });
+
+    return user;
+  }
+}
+
+export default UserService;
