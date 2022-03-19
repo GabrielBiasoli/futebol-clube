@@ -1,4 +1,5 @@
 import * as express from 'express';
+import * as cors from 'cors';
 import { UserController } from './controllers/UserController';
 import { generateToken } from './controllers/auth/generateToken';
 
@@ -10,7 +11,7 @@ class App {
   constructor() {
     this.app = express();
     this.config();
-    this.routes();
+    // this.routes();
   }
 
   private config(): void {
@@ -22,8 +23,8 @@ class App {
     };
 
     this.app.use(accessControl);
-    // this.app.use(express.json());
-    // this.app.use(cors());
+    this.app.use(express.json())
+    this.app.use(cors())
   }
 
   private routes(): void {

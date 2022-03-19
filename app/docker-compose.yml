@@ -6,6 +6,9 @@ services:
     depends_on:
       backend:
         condition: service_healthy
+    environment:
+      - REACT_APP_API_PORT=3001
+    restart: 'always'
     ports:
       - 3000:3000
     # Os `healthcheck` devem garantir que a aplicação
@@ -31,6 +34,7 @@ services:
       - DB_HOST=db
       - DB_NAME=TRYBE_FUTEBOL_CLUBE
       - DB_PORT=3306
+    restart: 'always'
     healthcheck:
       test: ["CMD", "lsof", "-t", "-i:3001"] # Caso utilize outra porta interna para o back, altere ela aqui também
       timeout: 10s

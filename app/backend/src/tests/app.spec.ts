@@ -14,6 +14,11 @@ describe('Request POST method to route "/login"', async () => {
   describe('when requested successfully', async () => {
     let chaiHttpResponse: Response;
 
+    const loginBody = {
+      email: "admin@admin.com",
+      password: "admin"
+    }
+
     const loginReturn = {
       "id": 1,
       "username": "Admin",
@@ -34,7 +39,8 @@ describe('Request POST method to route "/login"', async () => {
     it('reponse body is an object ', async () => {
       chaiHttpResponse = await chai
           .request(app)
-          .post('/login');
+          .post('/login')
+          .send(loginBody)
 
       expect(chaiHttpResponse.body).to.be.an('object');
     });
@@ -42,7 +48,8 @@ describe('Request POST method to route "/login"', async () => {
     it('response body has properties "user" and "token" ', async () => {
       chaiHttpResponse = await chai
       .request(app)
-      .post('/login');
+      .post('/login')
+      .send(loginBody)
 
       expect(chaiHttpResponse.body).to.have.all.keys('user', 'token');
     });
@@ -50,7 +57,8 @@ describe('Request POST method to route "/login"', async () => {
     it('"user" has properties "id", "username", "role" and "email" ', async () => {
       chaiHttpResponse = await chai
       .request(app)
-      .post('/login');
+      .post('/login')
+      .send(loginBody)
 
       expect(chaiHttpResponse.body.user).to.have.all.keys('id', 'username', 'role', 'email');
     });
@@ -58,7 +66,8 @@ describe('Request POST method to route "/login"', async () => {
     it('"token" is a string', async () => {
       chaiHttpResponse = await chai
       .request(app)
-      .post('/login');
+      .post('/login')
+      .send(loginBody)
 
       expect(chaiHttpResponse.body.token).to.be.a('string');
     })
