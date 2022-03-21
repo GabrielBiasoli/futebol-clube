@@ -8,7 +8,6 @@ services:
         condition: service_healthy
     environment:
       - REACT_APP_API_PORT=3001
-    restart: 'always'
     ports:
       - 3000:3000
     # Os `healthcheck` devem garantir que a aplicação
@@ -46,7 +45,6 @@ services:
       - 3002:3306
     environment:
       - MYSQL_ROOT_PASSWORD=123456
-    restart: 'always'
     healthcheck:
       test: ["CMD", "mysqladmin" ,"ping", "-h", "localhost"] # Deve aguardar o banco ficar operacional
       timeout: 10s
