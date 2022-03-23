@@ -10,6 +10,8 @@ const returnOptions = {
   raw: true,
 };
 
+const INVALID_USER = new Error('INVALID_USER');
+
 export class UserService {
   private _UserModel = User;
 
@@ -17,9 +19,9 @@ export class UserService {
     const user = await this._UserModel
       .findOne({ ...returnOptions, where: { email, password } });
 
-    // if (!user) throw new Error();
+    if (!user) throw INVALID_USER;
 
-    return user || {};
+    return user;
   }
 }
 
