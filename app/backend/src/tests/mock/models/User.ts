@@ -1,6 +1,6 @@
 import Users from './Users.json';
 
-const findOne = () => Users[0];
+const findOne = async () => Users[0];
 
 export {
   findOne

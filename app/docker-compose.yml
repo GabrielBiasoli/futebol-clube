@@ -1,43 +1,43 @@
 version: '3.9'
 services:
-  frontend:
-    build: ./frontend
-    # ...
-    depends_on:
-      backend:
-        condition: service_healthy
-    environment:
-      - REACT_APP_API_PORT=3001
-    ports:
-      - 3000:3000
-    # Os `healthcheck` devem garantir que a aplicação
-    # está operacional, antes de liberar o container
-    healthcheck:
-      test: ["CMD", "lsof", "-t", "-i:3000"]  # Caso utilize outra porta interna para o front, altere ela aqui também
-      timeout: 10s
-      retries: 5
-  backend:
-    build: ./backend
-    # ...
-    depends_on:
-      db:
-        condition: service_healthy
-    ports:
-      - 3001:3001
-    environment:
-      - PORT=3001
-      # Os dados abaixo se referem ao container `db`
-      # Dica: Relembre aqui da comunicação interna entre containers
-      - DB_USER=root
-      - DB_PASS=123456
-      - DB_HOST=db
-      - DB_NAME=TRYBE_FUTEBOL_CLUBE
-      - DB_PORT=3306
-    restart: 'always'
-    healthcheck:
-      test: ["CMD", "lsof", "-t", "-i:3001"] # Caso utilize outra porta interna para o back, altere ela aqui também
-      timeout: 10s
-      retries: 5
+#   frontend:
+#     build: ./frontend
+#     # ...
+#     depends_on:
+#       backend:
+#         condition: service_healthy
+#     environment:
+#       - REACT_APP_API_PORT=3001
+#     ports:
+#       - 3000:3000
+#     # Os `healthcheck` devem garantir que a aplicação
+#     # está operacional, antes de liberar o container
+#     healthcheck:
+#       test: ["CMD", "lsof", "-t", "-i:3000"]  # Caso utilize outra porta interna para o front, altere ela aqui também
+#       timeout: 10s
+#       retries: 5
+#   backend:
+#     build: ./backend
+#     # ...
+#     depends_on:
+#       db:
+#         condition: service_healthy
+#     ports:
+#       - 3001:3001
+#     environment:
+#       - PORT=3001
+#       # Os dados abaixo se referem ao container `db`
+#       # Dica: Relembre aqui da comunicação interna entre containers
+#       - DB_USER=root
+#       - DB_PASS=123456
+#       - DB_HOST=db
+#       - DB_NAME=TRYBE_FUTEBOL_CLUBE
+#       - DB_PORT=3306
+#     restart: 'always'
+#     healthcheck:
+#       test: ["CMD", "lsof", "-t", "-i:3001"] # Caso utilize outra porta interna para o back, altere ela aqui também
+#       timeout: 10s
+#       retries: 5
   db:
     image: mysql:8.0.21
     container_name: db

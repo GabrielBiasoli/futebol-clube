@@ -1,6 +1,6 @@
-import * as User from './User'
+import * as userMock from './User'
 
 
 export {
-  User
+  userMock
 }
