@@ -21,7 +21,11 @@ describe('Request POST method to route "/login"', async () => {
     password: "admin"
   }
 
-  describe('when requested successfully', async () => {
+  const invalidBody = {
+    email: "admin@admin.com",
+  }
+
+  describe('when user exists', async () => {
 
     const loginReturn = {
       "id": 1,
@@ -66,9 +70,8 @@ describe('Request POST method to route "/login"', async () => {
     })
   })
 
-  describe('when request fails', async () => {
-    // let chaiHttpResponse: Response;
-
+  describe("when email, or password, is invalid", async () => {
+    
     before(async () => {
       sinon
         .stub(User, "findOne")
@@ -99,8 +102,64 @@ describe('Request POST method to route "/login"', async () => {
       expect(chaiHttpResponse.body.message).to.be.equal("Incorrect email or password");
     });
 
-    it('the http code is 404', async () => {
-      expect(chaiHttpResponse.status).to.be.equal(404)
+    it('the http code is 401', async () => {
+      expect(chaiHttpResponse.status).to.be.equal(401)
     })
+  });
+
+  describe("when body request email is null", async () => {
+    before(async () => {   
+      chaiHttpResponse = await chai
+        .request(app)
+        .post('/login')
+        .send(invalidBody);  
+    });
+
+    it('return an object', async () => {
+
+      expect(chaiHttpResponse.body).to.be.an('object');
+    });
+
+    it('the object contains a property message', async () => {
+
+      expect(chaiHttpResponse.body).to.have.key('message');
+    });
+
+    it('the message is "All fields must be filled"', async () => {
+
+      expect(chaiHttpResponse.body.message).to.be.equal("All fields must be filled");
+    });
+
+    it('the http code is 401', async () => {
+      expect(chaiHttpResponse.status).to.be.equal(401)
+    })      
+  });
+
+  describe("when body request password is null", async () => {
+    before(async () => {   
+      chaiHttpResponse = await chai
+        .request(app)
+        .post('/login')
+        .send(invalidBody);  
+    });
+
+    it('return an object', async () => {
+
+      expect(chaiHttpResponse.body).to.be.an('object');
+    });
+
+    it('the object contains a property message', async () => {
+
+      expect(chaiHttpResponse.body).to.have.key('message');
+    });
+
+    it('the message is "All fields must be filled"', async () => {
+
+      expect(chaiHttpResponse.body.message).to.be.equal("All fields must be filled");
+    });
+
+    it('the http code is 401', async () => {
+      expect(chaiHttpResponse.status).to.be.equal(401)
+    })      
   });
 });
