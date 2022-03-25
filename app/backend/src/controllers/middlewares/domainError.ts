@@ -1,5 +1,4 @@
 import { NextFunction, Request, Response } from 'express';
-import rescue from 'express-rescue';
 import StatusCode from '../enums/StatusCode';
 
 interface ErrorMap {
@@ -12,13 +11,11 @@ const errorMap: ErrorMap = {
   MISSING_FIELDS: ['All fields must be filled', StatusCode.UNAUTHORIZED],
 };
 
-const domainError = rescue(
-  (err: Error, req: Request, res: Response, next: NextFunction) => {
-    if (!err.message) return next(err);
+const domainError = (err: Error, req: Request, res: Response, next: NextFunction) => {
+  if (!err.message) return next(err);
 
-    const [message, statusCode] = errorMap[err.message as keyof ErrorMap];
-    res.status(statusCode).json(message);
-  },
-);
+  const [message, statusCode] = errorMap[err.message as keyof ErrorMap];
+  res.status(statusCode).json({ message });
+};
 
 export default domainError;
