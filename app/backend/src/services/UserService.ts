@@ -12,17 +12,13 @@ const returnOptions = {
 
 const INVALID_USER = new Error('INVALID_USER');
 
-export class UserService {
-  private _UserModel = User;
+export const login = async ({ email, password }: Login) => {
+  const user = await User
+    .findOne({ ...returnOptions, where: { email, password } });
 
-  public async login({ email, password }: Login) {
-    const user = await this._UserModel
-      .findOne({ ...returnOptions, where: { email, password } });
+  if (!user) throw INVALID_USER;
 
-    if (!user) throw INVALID_USER;
+  return user;
+};
 
-    return user;
-  }
-}
-
-export default UserService;
+export default login;

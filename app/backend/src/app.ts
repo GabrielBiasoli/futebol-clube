@@ -1,12 +1,10 @@
 import * as express from 'express';
 import * as cors from 'cors';
-import { UserController } from './controllers/UserController';
+import * as UserController from './controllers/UserController';
 import { generateToken } from './controllers/auth/generateToken';
 
 class App {
   public app: express.Express;
-
-  private _UserController = new UserController();
 
   constructor() {
     this.app = express();
@@ -28,7 +26,7 @@ class App {
   }
 
   private routes(): void {
-    this.app.post('/login', this._UserController.login, generateToken);
+    this.app.post('/login', UserController.login, generateToken);
   }
 
   // ...
