@@ -3,6 +3,7 @@ import * as cors from 'cors';
 import * as UserController from './controllers/UserController';
 import { generateToken } from './controllers/auth/generateToken';
 import domainError from './controllers/middlewares/domainError';
+import authenticateToken from './controllers/auth/authenticateToken';
 
 class App {
   public app: express.Express;
@@ -28,6 +29,7 @@ class App {
 
   private routes(): void {
     this.app.post('/login', UserController.login, generateToken);
+    this.app.get('/login/validate', authenticateToken, UserController.getRole);
     this.app.use(domainError);
   }
 

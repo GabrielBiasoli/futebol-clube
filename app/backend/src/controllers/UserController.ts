@@ -18,4 +18,9 @@ export const login = async (req: Request, _res: Response, next: NextFunction): P
   next();
 };
 
+export const getRole = async (req: Request, res: Response, _next: NextFunction): Promise<void> => {
+  const { role } = req.body.user;
+  res.status(200).json(role);
+};
+
 export default login;
