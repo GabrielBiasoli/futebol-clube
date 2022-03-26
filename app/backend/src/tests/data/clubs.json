@@ -1,0 +1,14 @@
+[
+  {
+		"id": 1,
+		"clubName": "Grêmio"
+	},
+	{
+		"id": 2,
+		"clubName": "Internacional"
+	},
+  {
+    "id": 3,
+    "clubName": "Flamengo"
+  }
+]

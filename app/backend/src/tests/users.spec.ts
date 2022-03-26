@@ -5,8 +5,6 @@ import chaiHttp = require('chai-http');
 import { app } from '../app';
 import User from '../database/models/User'
 import { Response } from 'superagent';
-import { userMock } from './mock/models';
-// import Users from './mock/models/Users.json'
 import { Model } from 'sequelize/types';
 
 chai.use(chaiHttp);
@@ -25,14 +23,15 @@ describe('Request POST method to route "/login"', async () => {
     email: "admin@admin.com",
   }
 
+  const loginReturn = {
+    "id": 1,
+    "username": "Admin",
+    "role": "admin",
+    "email": "admin@admin.com"  
+  }
+  
   describe('when user exists', async () => {
 
-    const loginReturn = {
-      "id": 1,
-      "username": "Admin",
-      "role": "admin",
-      "email": "admin@admin.com"  
-    }
 
     before(async () => {
       sinon
