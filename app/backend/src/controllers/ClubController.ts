@@ -7,4 +7,8 @@ export const getAll = async (req: Request, res: Response, _next: NextFunction): 
   res.status(200).json(clubs);
 };
 
-export default getAll;
+export const getById = async (req: Request, res: Response, _next: NextFunction): Promise<void> => {
+  const { id } = req.params;
+  const club = await ClubService.getById(id);
+  res.status(200).json(club);
+};

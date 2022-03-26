@@ -32,6 +32,7 @@ class App {
     this.app.post('/login', UserController.login, generateToken);
     this.app.get('/login/validate', authenticateToken, UserController.getRole);
     this.app.get('/clubs', ClubController.getAll);
+    this.app.get('/clubs/:id', ClubController.getById);
     this.app.use(domainError);
   }
 

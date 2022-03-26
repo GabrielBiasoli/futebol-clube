@@ -62,8 +62,8 @@ describe('Request GET method to route "/clubs/:id" ', async () => {
       expect(chaiHttpResponse.body).to.have.all.keys('id', 'clubName');
     })
 
-    it('the property "id" is equal to "1"', () => {
-      expect(chaiHttpResponse.body.id).to.be.equal("1");
+    it('the property "id" is equal to 1', () => {
+      expect(chaiHttpResponse.body.id).to.be.equal(1);
     })
 
     it('the property "clubName" is equal to "Grêmio"', () => {

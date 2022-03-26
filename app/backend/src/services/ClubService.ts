@@ -5,4 +5,7 @@ export const getAll = async () => {
   return clubs;
 };
 
-export default getAll;
+export const getById = async (id: string) => {
+  const club = await Club.findByPk(id);
+  return club;
+};
