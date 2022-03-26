@@ -30,11 +30,11 @@ describe('Request GET method to route "/clubs" ', async () => {
     })
 
     it('the array contains objects', async () => {
-      expect(chaiHttpResponse.body).to.be.an('array').of('objects')
+      expect(chaiHttpResponse.body).to.be.an('array').of('object')
     })
 
-    it('the objects contain "id" and "clubname" properties', async () => {
-      expect(chaiHttpResponse.body[0]).to.have.all.keys('id', 'clubname');
+    it('the objects contain "id" and "clubName" properties', async () => {
+      expect(chaiHttpResponse.body[0]).to.have.all.keys('id', 'clubName');
     })
   })
 })
