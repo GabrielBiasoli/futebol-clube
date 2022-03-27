@@ -1,0 +1,30 @@
+[
+  {
+    "id": 1,
+    "homeTeam": 2,
+    "homeTeamGoals": 0,
+    "awayTeam": 1,
+    "awayTeamGoals": 3,
+    "inProgress": true,
+    "homeClub": {
+      "clubName": "Internacional"
+    },
+    "awayClub": {
+      "clubName": "Grêmio"
+    }
+  },
+  {
+    "id": 13,
+    "homeTeam": 4,
+    "homeTeamGoals": 3,
+    "awayTeam": 1,
+    "awayTeamGoals": 2,
+    "inProgress": true,
+    "homeClub": {
+      "clubName": "São Paulo"
+    },
+    "awayClub": {
+      "clubName": "Grêmio"
+    }
+  }
+]
