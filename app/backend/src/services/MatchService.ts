@@ -4,8 +4,17 @@ import Match from '../database/models/Match';
 export const getAll = async () => {
   const matchs = await Match.findAll({
     include: [
-      { model: Club, as: 'homeClub', attributes: { exclude: ['id'] } },
-      { model: Club, as: 'awayClub', attributes: { exclude: ['id'] } },
+      {
+        model: Club,
+        as: 'homeClub',
+        foreignKey: 'homeTeam',
+        attributes: { exclude: ['id'] },
+      },
+      { model: Club,
+        as: 'awayClub',
+        foreignKey: 'awayTeam',
+        attributes: { exclude: ['id'] },
+      },
     ],
   });
 
