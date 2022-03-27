@@ -35,6 +35,7 @@ class App {
     this.app.get('/clubs', ClubController.getAll);
     this.app.get('/clubs/:id', ClubController.getById);
     this.app.get('/matchs', MatchController.getAll, MatchController.getAllInProgress);
+    this.app.post('/matchs', authenticateToken, MatchController.create);
     this.app.use(domainError);
   }
 

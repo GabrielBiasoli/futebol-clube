@@ -190,3 +190,44 @@ describe('Request POST method to route "/matchs" ', async () => {
     });
   });
 });
+
+describe('Request PATCH method to route "/matchs/:id/finish" ', async () => {
+  let chaiHttpResponse: Response
+
+  describe('when property "inProgress" is false ', async () => {
+  
+    const reqBody  = {
+      "homeTeam": 1,
+      "awayTeam": 2,
+      "homeTeamGoals": 2,
+      "awayTeamGoals": 0,
+      "inProgress": false
+    }
+
+    const resBody = {
+      id: 1,
+      ...reqBody,
+    }
+
+    const numberOfUpdates = 1
+
+    before(async () => {
+      sinon
+        .stub(Match, "update")
+        .resolves([numberOfUpdates, [resBody] as unknown as Model[]]);
+
+      chaiHttpResponse = await chai
+        .request(app)
+        .patch('/matchs')
+    });
+
+    after(async () => {
+      (Match.update as sinon.SinonStub).restore()
+    });
+
+    it('does not return anything ', async () => {
+      expect(chaiHttpResponse.body).to.be.undefined;
+    })
+
+  });
+});

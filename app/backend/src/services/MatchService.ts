@@ -38,6 +38,7 @@ export const create = async (
     inProgress,
   }: NewMatch,
 ) => {
+  if (inProgress !== 'true') throw new Error('inProgress property must be true');
   const newMatch = { homeTeam, awayTeam, homeTeamGoals, awayTeamGoals, inProgress };
   const createdMatch = await Match.create(newMatch);
   return createdMatch;
