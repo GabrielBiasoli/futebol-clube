@@ -1,10 +1,14 @@
 import { Request, NextFunction, Response } from 'express';
 import * as MatchService from '../services/MatchService';
 
-export const getAll = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
-  if (req.query) return next();
+export const getAll = async (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+): Promise<Response | void> => {
+  if (req.query.inProgress) return next();
   const matchs = await MatchService.getAll();
-  res.status(200).json(matchs);
+  return res.status(200).json(matchs);
 };
 
 export const getAllInProgress = async (req: Request, res: Response, _next: NextFunction) => {
