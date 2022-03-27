@@ -1,3 +1,4 @@
+import NewMatch from '../interfaces/NewMatch';
 import Club from '../database/models/Club';
 import Match from '../database/models/Match';
 
@@ -28,4 +29,16 @@ export const getAllInProgress = async (inProgress: string) => {
   return filteredMatchs;
 };
 
-export default getAll;
+export const create = async (
+  {
+    homeTeam,
+    awayTeam,
+    homeTeamGoals,
+    awayTeamGoals,
+    inProgress,
+  }: NewMatch,
+) => {
+  const newMatch = { homeTeam, awayTeam, homeTeamGoals, awayTeamGoals, inProgress };
+  const createdMatch = await Match.create(newMatch);
+  return createdMatch;
+};

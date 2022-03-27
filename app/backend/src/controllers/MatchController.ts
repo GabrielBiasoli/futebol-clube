@@ -17,4 +17,7 @@ export const getAllInProgress = async (req: Request, res: Response, _next: NextF
   res.status(200).json(matchs);
 };
 
-export default getAll;
+export const create = async (req: Request, res: Response, _next: NextFunction) => {
+  const newMatch = await MatchService.create(req.body);
+  res.status(201).json(newMatch);
+};

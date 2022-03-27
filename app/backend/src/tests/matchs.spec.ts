@@ -8,6 +8,7 @@ import { Response } from 'superagent';
 import { Model } from 'sequelize/types';
 import matchs = require('./data/matchsWithClubs.json')
 import matchInProgress = require('./data/matchsInProgress.json')
+import User from '../database/models/User';
 
 chai.use(chaiHttp);
 
@@ -113,6 +114,18 @@ describe('Request POST method to route "/matchs" ', async () => {
 
   describe('when property "inProgress" is true ', async () => {
   
+    const loginBody = {
+      email: "admin@admin.com",
+      password: "admin"
+    }
+
+    const loginReturn = {
+      "id": 1,
+      "username": "Admin",
+      "role": "admin",
+      "email": "admin@admin.com"  
+    }
+
     const reqBody  = {
       "homeTeam": 1,
       "awayTeam": 2,
@@ -131,10 +144,20 @@ describe('Request POST method to route "/matchs" ', async () => {
         .stub(Match, "create")
         .resolves(resBody as unknown as Model);
       
+      sinon
+        .stub(User, "findOne")
+        .resolves(loginReturn as unknown as Model);
+
+      const { body: { token } } = await chai
+        .request(app)
+        .post('/login')
+        .send(loginBody);
+
       chaiHttpResponse = await chai
         .request(app)
         .post('/matchs')
-        .send(reqBody);
+        .send(reqBody)
+        .set("X-API-Key", token);
     });
 
     after(async () => {
