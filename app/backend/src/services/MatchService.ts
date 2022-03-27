@@ -21,4 +21,11 @@ export const getAll = async () => {
   return matchs;
 };
 
+export const getAllInProgress = async (inProgress: string) => {
+  const matchs = await getAll();
+  const filteredMatchs = matchs
+    .filter((match) => `${match.inProgress}` === inProgress);
+  return filteredMatchs;
+};
+
 export default getAll;

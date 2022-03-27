@@ -34,7 +34,7 @@ class App {
     this.app.get('/login/validate', authenticateToken, UserController.getRole);
     this.app.get('/clubs', ClubController.getAll);
     this.app.get('/clubs/:id', ClubController.getById);
-    this.app.get('/matchs', MatchController.getAll);
+    this.app.get('/matchs', MatchController.getAll, MatchController.getAllInProgress);
     this.app.use(domainError);
   }
 
