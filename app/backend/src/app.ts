@@ -2,6 +2,7 @@ import * as express from 'express';
 import * as cors from 'cors';
 import * as UserController from './controllers/UserController';
 import * as ClubController from './controllers/ClubController';
+import * as MatchController from './controllers/MatchController';
 import { generateToken } from './controllers/auth/generateToken';
 import domainError from './controllers/middlewares/domainError';
 import authenticateToken from './controllers/auth/authenticateToken';
@@ -33,6 +34,7 @@ class App {
     this.app.get('/login/validate', authenticateToken, UserController.getRole);
     this.app.get('/clubs', ClubController.getAll);
     this.app.get('/clubs/:id', ClubController.getById);
+    this.app.get('/matchs', MatchController.getAll);
     this.app.use(domainError);
   }
 
