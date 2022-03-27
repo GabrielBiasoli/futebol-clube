@@ -108,3 +108,62 @@ describe('Request GET method to route "/matchs" ', async () => {
   })
 });
 
+describe('Request POST method to route "/matchs" ', async () => {
+  let chaiHttpResponse: Response
+
+  describe('when property "inProgress" is true ', async () => {
+  
+    const reqBody  = {
+      "homeTeam": 1,
+      "awayTeam": 2,
+      "homeTeamGoals": 2,
+      "awayTeamGoals": 0,
+      "inProgress": true
+    }
+
+    const resBody = {
+      id: 1,
+      ...reqBody,
+    }
+
+    before(async () => {
+      sinon
+        .stub(Match, "create")
+        .resolves(resBody as unknown as Model);
+      
+      chaiHttpResponse = await chai
+        .request(app)
+        .post('/matchs')
+        .send(reqBody);
+    });
+
+    after(async () => {
+      (Match.create as sinon.SinonStub).restore()
+    });
+
+    it('return an object', async () => {
+      expect(chaiHttpResponse.body).to.be.an('object');
+    })
+
+    it('the object contains the property "id', async () => {
+      expect(chaiHttpResponse.body).to.have.key("id");
+    });
+
+    it('the object contains both "homeTeam" and "awayTeam" properties', async () => {
+      expect(chaiHttpResponse.body).to.have.keys('homeTeam', 'awayTeam');
+    });
+
+    it('the object contains all "homeTeamGoals", "awayTeamGoals" and "inProgress" properties ',
+      async () => {
+        expect(chaiHttpResponse.body)
+          .to
+          .have
+          .keys('homeTeamGoals', 'awayTeamGoals', 'inProgress');
+
+      });
+
+    it('the object response is the expected one ', async () => {
+      expect(chaiHttpResponse.body).to.be.equal(resBody);
+    });
+  });
+});
