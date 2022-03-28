@@ -21,3 +21,9 @@ export const create = async (req: Request, res: Response, _next: NextFunction) =
   const newMatch = await MatchService.create(req.body);
   res.status(201).json(newMatch);
 };
+
+export const update = async (req: Request, res: Response, _next: NextFunction) => {
+  const { id } = req.params;
+  await MatchService.updateOne(id);
+  res.status(204).end();
+};

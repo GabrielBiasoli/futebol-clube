@@ -43,3 +43,8 @@ export const create = async (
   const createdMatch = await Match.create(newMatch);
   return createdMatch;
 };
+
+export const updateOne = async (id: string) => {
+  const match = await Match.findByPk(id);
+  await Match.update({ ...match, inProgress: false }, { where: { id } });
+};
