@@ -1,3 +1,4 @@
+import * as bcrypt from 'bcryptjs';
 import User from '../database/models/User';
 
 interface Login {
@@ -5,20 +6,20 @@ interface Login {
   password: string,
 }
 
-const returnOptions = {
-  attributes: { exclude: ['password'] },
-  raw: true,
-};
+// const returnOptions = {
+//   attributes: { exclude: ['password'] },
+//   raw: true,
+// };
 
 const INVALID_USER = new Error('INVALID_USER');
 
 export const login = async ({ email, password }: Login) => {
-  const user = await User
-    .findOne({ ...returnOptions, where: { email, password } });
+  const userFromRegister = await User.findOne({ where: { email }, raw: true });
+  const correctPassword = bcrypt.compareSync(password, (userFromRegister?.password as string));
 
-  if (!user) throw INVALID_USER;
+  if (!correctPassword) throw INVALID_USER;
 
-  return user;
+  return userFromRegister;
 };
 
 export default login;
