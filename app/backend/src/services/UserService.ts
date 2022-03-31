@@ -14,12 +14,18 @@ interface Login {
 const INVALID_USER = new Error('INVALID_USER');
 
 export const login = async ({ email, password }: Login) => {
-  const userFromRegister = await User.findOne({ where: { email }, raw: true });
-  const correctPassword = bcrypt.compareSync(password, (userFromRegister?.password as string));
+  const validUser = await User.findOne({ where: { email }, raw: true });
+  if (!validUser) throw INVALID_USER;
+  const correctPassword = bcrypt.compareSync(password, (validUser?.password as string));
 
   if (!correctPassword) throw INVALID_USER;
 
-  return userFromRegister;
+  return {
+    id: validUser.id,
+    username: validUser.username,
+    role: validUser.role,
+    email: validUser.email,
+  };
 };
 
 export default login;
