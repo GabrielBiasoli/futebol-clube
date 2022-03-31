@@ -1,6 +1,6 @@
 import * as sinon from 'sinon';
 import * as chai from 'chai';
-import chaiHttp = require('chai-http');
+import chaiHttp = require('chai-http') 
 
 import { app } from '../app';
 import User from '../database/models/User'
@@ -16,18 +16,19 @@ describe('Request POST method to route "/login"', async () => {
   let chaiHttpResponse: Response;
   const loginBody = {
     email: "admin@admin.com",
-    password: "admin"
+    password: "secret_admin"
   }
 
   const invalidBody = {
     email: "admin@admin.com",
   }
 
-  const loginReturn = {
+  const userReturned = {
     "id": 1,
     "username": "Admin",
     "role": "admin",
-    "email": "admin@admin.com"  
+    "email": "admin@admin.com",
+    "password": "$2a$08$xi.Hxk1czAO0nZR..B393u10aED0RQ1N3PAEXQ7HxtLjKPEZBu.PW"
   }
   
   describe('when user exists', async () => {
@@ -36,7 +37,7 @@ describe('Request POST method to route "/login"', async () => {
     before(async () => {
       sinon
         .stub(User, "findOne")
-        .resolves(loginReturn as unknown as Model);
+        .resolves(userReturned as unknown as Model);
       
       chaiHttpResponse = await chai
         .request(app)

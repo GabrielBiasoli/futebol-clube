@@ -1,14 +1,14 @@
 import * as sinon from 'sinon';
 import * as chai from 'chai';
-import chaiHttp from 'chai-http'
+import chaiHttp = require("chai-http");
 
 import { app } from '../app';
-import Match from '../database/models/Match'
+import Match from '../database/models/Match';
 import { Response } from 'superagent';
 import { Model } from 'sequelize/types';
-import matchs = require('./data/matchsWithClubs.json')
-import matchInProgress = require('./data/matchsInProgress.json')
 import User from '../database/models/User';
+const matchInProgress = require('./data/matchsInProgress.json');
+const matchs = require('./data/matchsWithClubs.json');
 
 chai.use(chaiHttp);
 
