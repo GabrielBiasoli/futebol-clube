@@ -14,13 +14,13 @@ const errorMap: ErrorMap = {
   MISSING_FIELDS: ['All fields must be filled', StatusCode.UNAUTHORIZED],
   EQUAL_TEAMS: [
     'It is not possible to create a match with two equal teams',
-    StatusCode.BAD_REQUEST,
+    StatusCode.UNAUTHORIZED,
   ],
-  INVALID_INPROGRESS: ['inProgress property must be true', StatusCode.BAD_REQUEST],
-  TEAM_NOT_FOUND: ['There is no team with such id!', StatusCode.BAD_REQUEST],
+  INVALID_INPROGRESS: ['inProgress property must be true', StatusCode.UNAUTHORIZED],
+  TEAM_NOT_FOUND: ['There is no team with such id!', StatusCode.UNAUTHORIZED],
 };
 
-const domainError = (err: Error, req: Request, res: Response, next: NextFunction) => {
+const domainError = async (err: Error, req: Request, res: Response, next: NextFunction) => {
   if (!err.message) return next(err);
 
   // console.log(err);

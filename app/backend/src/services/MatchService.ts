@@ -35,16 +35,18 @@ export const getAllInProgress = async (inProgress: string) => {
 };
 
 const teamsExist = async (homeTeamId: number, awayTeamId: number) => {
-  const homeTeam = await ClubService.getById(homeTeamId);
-  const awayTeam = await ClubService.getById(awayTeamId);
-  if (!homeTeam || !awayTeam) throw TEAM_NOT_FOUND;
+  const teams = await ClubService.getAll();
+  const homeTeamExists = teams.some((team) => team.id === homeTeamId);
+  const awayTeamExists = teams.some((team) => team.id === awayTeamId);
+
+  if (!homeTeamExists || !awayTeamExists) throw TEAM_NOT_FOUND;
 };
 
 const validateNewMatch = async (newMatch: NewMatch) => {
-  if (!newMatch.inProgress) throw INVALID_INPROGRESS;
   const { homeTeam, awayTeam } = newMatch;
   if (homeTeam === awayTeam) throw EQUAL_TEAMS;
   await teamsExist(homeTeam, awayTeam);
+  if (!newMatch.inProgress) throw INVALID_INPROGRESS;
 };
 
 const getLastOne = async (): Promise<Match | null> => {
@@ -69,6 +71,5 @@ export const create = async (
 };
 
 export const updateOne = async (id: string) => {
-  const match = await Match.findByPk(id);
-  await Match.update({ ...match, inProgress: false }, { where: { id } });
+  await Match.update({ inProgress: false }, { where: { id } });
 };

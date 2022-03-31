@@ -34,9 +34,9 @@ class App {
     this.app.get('/login/validate', authenticateToken, UserController.getRole);
     this.app.get('/clubs', ClubController.getAll);
     this.app.get('/clubs/:id', ClubController.getById);
+    this.app.patch('/matchs/:id/finish', MatchController.update);
     this.app.get('/matchs', MatchController.getAll, MatchController.getAllInProgress);
     this.app.post('/matchs', authenticateToken, MatchController.create);
-    this.app.patch('/matchs/:id/finish', MatchController.update);
     this.app.use(domainError);
   }
 
