@@ -1,5 +1,6 @@
 enum StatusCode {
-  UNAUTHORIZED = 401,
+  BAD_REQUEST = 400,
+  UNAUTHORIZED,
 }
 
 export default StatusCode;

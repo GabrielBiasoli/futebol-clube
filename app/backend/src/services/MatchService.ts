@@ -1,4 +1,4 @@
-import NewMatch from '../interfaces/NewMatch';
+import NewMatch from '../database/interfaces/NewMatch';
 import Club from '../database/models/Club';
 import Match from '../database/models/Match';
 
@@ -29,6 +29,11 @@ export const getAllInProgress = async (inProgress: string) => {
   return filteredMatchs;
 };
 
+const getLastOne = async (): Promise<Match | null> => {
+  const match = await Match.findOne({ order: [['id', 'DESC']] });
+  return match;
+};
+
 export const create = async (
   {
     homeTeam,
@@ -37,11 +42,12 @@ export const create = async (
     awayTeamGoals,
     inProgress,
   }: NewMatch,
-) => {
-  if (inProgress !== 'true') throw new Error('inProgress property must be true');
-  const newMatch = { homeTeam, awayTeam, homeTeamGoals, awayTeamGoals, inProgress };
-  const createdMatch = await Match.create(newMatch);
-  return createdMatch;
+): Promise<Match | null> => {
+  if (!inProgress) throw new Error('inProgress property must be true');
+  const newMatchData = { homeTeam, awayTeam, homeTeamGoals, awayTeamGoals, inProgress };
+  await Match.create(newMatchData);
+
+  return getLastOne();
 };
 
 export const updateOne = async (id: string) => {
