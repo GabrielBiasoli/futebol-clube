@@ -2,6 +2,8 @@ import NewMatch from '../database/interfaces/NewMatch';
 import Club from '../database/models/Club';
 import Match from '../database/models/Match';
 
+const EQUAL_TEAMS = new Error('EQUAL_TEAMS');
+
 export const getAll = async () => {
   const matchs = await Match.findAll({
     include: [
@@ -34,6 +36,12 @@ const getLastOne = async (): Promise<Match | null> => {
   return match;
 };
 
+const validateNewMatch = (newMatch: NewMatch) => {
+  if (!newMatch.inProgress) throw new Error('inProgress property must be true');
+  const { homeTeam, awayTeam } = newMatch;
+  if (homeTeam === awayTeam) throw EQUAL_TEAMS;
+};
+
 export const create = async (
   {
     homeTeam,
@@ -43,8 +51,8 @@ export const create = async (
     inProgress,
   }: NewMatch,
 ): Promise<Match | null> => {
-  if (!inProgress) throw new Error('inProgress property must be true');
   const newMatchData = { homeTeam, awayTeam, homeTeamGoals, awayTeamGoals, inProgress };
+  validateNewMatch(newMatchData);
   await Match.create(newMatchData);
 
   return getLastOne();

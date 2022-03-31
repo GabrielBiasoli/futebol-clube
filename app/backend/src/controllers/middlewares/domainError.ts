@@ -11,7 +11,9 @@ const errorMap: ErrorMap = {
   INVALID_USER: ['Incorrect email or password', StatusCode.UNAUTHORIZED],
   MISSING_FIELDS: ['All fields must be filled', StatusCode.UNAUTHORIZED],
   EQUAL_TEAMS: [
-    'It is not possible to create a match with two equal teams', StatusCode.UNAUTHORIZED],
+    'It is not possible to create a match with two equal teams',
+    StatusCode.BAD_REQUEST,
+  ],
 };
 
 const domainError = (err: Error, req: Request, res: Response, next: NextFunction) => {

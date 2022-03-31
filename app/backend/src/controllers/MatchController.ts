@@ -1,6 +1,8 @@
 import { Request, NextFunction, Response } from 'express';
 import * as MatchService from '../services/MatchService';
 
+require('express-async-errors');
+
 export const getAll = async (
   req: Request,
   res: Response,
