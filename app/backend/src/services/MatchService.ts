@@ -1,8 +1,11 @@
 import NewMatch from '../database/interfaces/NewMatch';
 import Club from '../database/models/Club';
+import * as ClubService from './ClubService';
 import Match from '../database/models/Match';
 
 const EQUAL_TEAMS = new Error('EQUAL_TEAMS');
+const INVALID_INPROGRESS = new Error('INVALID_INPROGRESS');
+const TEAM_NOT_FOUND = new Error('TEAM_NOT_FOUND');
 
 export const getAll = async () => {
   const matchs = await Match.findAll({
@@ -31,15 +34,22 @@ export const getAllInProgress = async (inProgress: string) => {
   return filteredMatchs;
 };
 
+const teamsExist = async (homeTeamId: number, awayTeamId: number) => {
+  const homeTeam = await ClubService.getById(homeTeamId);
+  const awayTeam = await ClubService.getById(awayTeamId);
+  if (!homeTeam || !awayTeam) throw TEAM_NOT_FOUND;
+};
+
+const validateNewMatch = async (newMatch: NewMatch) => {
+  if (!newMatch.inProgress) throw INVALID_INPROGRESS;
+  const { homeTeam, awayTeam } = newMatch;
+  if (homeTeam === awayTeam) throw EQUAL_TEAMS;
+  await teamsExist(homeTeam, awayTeam);
+};
+
 const getLastOne = async (): Promise<Match | null> => {
   const match = await Match.findOne({ order: [['id', 'DESC']] });
   return match;
-};
-
-const validateNewMatch = (newMatch: NewMatch) => {
-  if (!newMatch.inProgress) throw new Error('inProgress property must be true');
-  const { homeTeam, awayTeam } = newMatch;
-  if (homeTeam === awayTeam) throw EQUAL_TEAMS;
 };
 
 export const create = async (
@@ -52,7 +62,7 @@ export const create = async (
   }: NewMatch,
 ): Promise<Match | null> => {
   const newMatchData = { homeTeam, awayTeam, homeTeamGoals, awayTeamGoals, inProgress };
-  validateNewMatch(newMatchData);
+  await validateNewMatch(newMatchData);
   await Match.create(newMatchData);
 
   return getLastOne();

@@ -1,6 +1,6 @@
 export default interface NewMatch {
-  homeTeam: string,
-  awayTeam: string,
+  homeTeam: number,
+  awayTeam: number,
   homeTeamGoals: string,
   awayTeamGoals: string,
   inProgress: string,

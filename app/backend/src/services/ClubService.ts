@@ -5,7 +5,7 @@ export const getAll = async () => {
   return clubs;
 };
 
-export const getById = async (id: string) => {
+export const getById = async (id: number) => {
   const club = await Club.findByPk(id);
   return club;
 };

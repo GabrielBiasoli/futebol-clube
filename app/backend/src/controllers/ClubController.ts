@@ -9,6 +9,6 @@ export const getAll = async (req: Request, res: Response, _next: NextFunction): 
 
 export const getById = async (req: Request, res: Response, _next: NextFunction): Promise<void> => {
   const { id } = req.params;
-  const club = await ClubService.getById(id);
+  const club = await ClubService.getById(Number(id));
   res.status(200).json(club);
 };

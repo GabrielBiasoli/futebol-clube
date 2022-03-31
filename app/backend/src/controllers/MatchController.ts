@@ -20,8 +20,6 @@ export const getAllInProgress = async (req: Request, res: Response, _next: NextF
 };
 
 export const create = async (req: Request, res: Response, _next: NextFunction) => {
-  console.log(req.body);
-
   const newMatch = await MatchService.create(req.body);
   res.status(201).json(newMatch);
 };

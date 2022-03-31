@@ -4,7 +4,9 @@ import StatusCode from '../enums/StatusCode';
 interface ErrorMap {
   INVALID_USER: [string, StatusCode],
   MISSING_FIELDS: [string, StatusCode],
-  EQUAL_TEAMS: [string, StatusCode]
+  EQUAL_TEAMS: [string, StatusCode],
+  INVALID_INPROGRESS: [string, StatusCode],
+  TEAM_NOT_FOUND: [string, StatusCode],
 }
 
 const errorMap: ErrorMap = {
@@ -14,6 +16,8 @@ const errorMap: ErrorMap = {
     'It is not possible to create a match with two equal teams',
     StatusCode.BAD_REQUEST,
   ],
+  INVALID_INPROGRESS: ['inProgress property must be true', StatusCode.BAD_REQUEST],
+  TEAM_NOT_FOUND: ['There is no team with such id!', StatusCode.BAD_REQUEST],
 };
 
 const domainError = (err: Error, req: Request, res: Response, next: NextFunction) => {
