@@ -14,6 +14,15 @@ const getMatchResult = (goalsbalance: number) => {
   return goalsbalance === 0 ? [0, 1, 0] : [0, 0, 1];
 };
 
+interface MatchResult {
+  goalsFavor: number,
+  goalsOwn: number,
+  goalsBalance: number,
+  victory: number,
+  draw: number,
+  loss: number,
+}
+
 const getMatchInfo = (clubMatchs: Match[], id: number) => clubMatchs.map((match) => {
   const [teamSide, opositeSide] = match.homeTeam === id
     ? ['homeTeam', 'awayTeam']
@@ -31,6 +40,25 @@ const getMatchInfo = (clubMatchs: Match[], id: number) => clubMatchs.map((match)
     loss,
   };
 });
+
+const sumMatchResults = (matchResults: MatchResult[]) => {
+  const totalGoalsFavor = matchResults.reduce((acc, { goalsFavor }) => acc + goalsFavor, 0);
+  const totalGoalsOwn = matchResults.reduce((acc, { goalsOwn }) => acc + goalsOwn, 0);
+  const totalGoalsBalance = matchResults.reduce((acc, { goalsBalance }) => acc + goalsBalance, 0);
+  const totalGames = matchResults.length;
+  const totalVictories = matchResults.reduce((acc, { victory }) => acc + victory, 0);
+  const totalDraws = matchResults.reduce((acc, { draw }) => acc + draw, 0);
+  const totalLosses = matchResults.reduce((acc, { loss }) => acc + loss, 0);
+  return {
+    totalGames,
+    totalVictories,
+    totalDraws,
+    totalLosses,
+    goalsFavor: totalGoalsFavor,
+    goalsOwn: totalGoalsOwn,
+    goalsBalance: totalGoalsBalance,
+  };
+};
 
 const getTotalGameByClub = async () => {
   const clubs = await ClubService.getAll();
