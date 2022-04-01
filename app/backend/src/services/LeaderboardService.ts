@@ -67,11 +67,11 @@ const sumMatchsResults = (matchResults: MatchResult[]) => {
   };
 };
 
-const getAllMatchsByClub = async () => {
+export const getAllClubsWithInfo = async () => {
   const clubs = await ClubService.getAll();
   const matchs = await MatchService.getAll();
   const clubsWithMatchs = clubs.map((club) => filterMatchsByClub(matchs, club));
-  clubsWithMatchs.map(({ clubMatchs, name, id }) => {
+  return clubsWithMatchs.map(({ clubMatchs, name, id }) => {
     const matchInfo = getMatchInfo(clubMatchs, id);
     const matchResultsSummed = sumMatchsResults(matchInfo);
     return {
@@ -81,4 +81,4 @@ const getAllMatchsByClub = async () => {
   });
 };
 
-export default getAllMatchsByClub;
+export default getAllClubsWithInfo;
