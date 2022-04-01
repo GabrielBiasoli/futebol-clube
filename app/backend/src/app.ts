@@ -30,13 +30,14 @@ class App {
   }
 
   private routes(): void {
+    this.app.patch('/matchs/:id/finish', MatchController.finishMatch, MatchController.getAll);
+    this.app.patch('/matchs/:id', MatchController.updateGoals);
+    this.app.get('/matchs', MatchController.getAll, MatchController.getAllInProgress);
+    this.app.post('/matchs', authenticateToken, MatchController.create);
     this.app.post('/login', UserController.login, generateToken);
     this.app.get('/login/validate', authenticateToken, UserController.getRole);
     this.app.get('/clubs', ClubController.getAll);
     this.app.get('/clubs/:id', ClubController.getById);
-    this.app.patch('/matchs/:id/finish', MatchController.update);
-    this.app.get('/matchs', MatchController.getAll, MatchController.getAllInProgress);
-    this.app.post('/matchs', authenticateToken, MatchController.create);
     this.app.use(domainError);
   }
 

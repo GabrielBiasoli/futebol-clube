@@ -24,8 +24,15 @@ export const create = async (req: Request, res: Response, _next: NextFunction) =
   res.status(201).json(newMatch);
 };
 
-export const update = async (req: Request, res: Response, _next: NextFunction) => {
+export const finishMatch = async (req: Request, res: Response, _next: NextFunction) => {
   const { id } = req.params;
-  await MatchService.updateOne(id);
-  res.status(200).end();
+  const [numberOfUpdates, updatedMatch] = await MatchService.finishMatch(Number(id));
+  res.status(200).json({ numberOfUpdates, updatedMatch });
+};
+
+export const updateGoals = async (req: Request, res: Response, _next: NextFunction) => {
+  const { id } = req.params;
+  const { homeTeamGoals, awayTeamGoals } = req.body;
+  const [numberOfUpdates] = await MatchService.updateGoals({ id, homeTeamGoals, awayTeamGoals });
+  res.status(200).json({ numberOfUpdates });
 };

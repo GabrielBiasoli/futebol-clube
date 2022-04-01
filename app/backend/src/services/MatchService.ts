@@ -1,4 +1,5 @@
 import NewMatch from '../database/interfaces/NewMatch';
+import UpdateGoals from '../database/interfaces/UpdateGoals';
 import Club from '../database/models/Club';
 import * as ClubService from './ClubService';
 import Match from '../database/models/Match';
@@ -70,6 +71,8 @@ export const create = async (
   return getLastOne();
 };
 
-export const updateOne = async (id: string) => {
-  await Match.update({ inProgress: false }, { where: { id } });
-};
+export const finishMatch = async (id: number) => Match
+  .update({ inProgress: false }, { where: { id } });
+
+export const updateGoals = async ({ homeTeamGoals, awayTeamGoals, id }: UpdateGoals) => Match
+  .update({ awayTeamGoals, homeTeamGoals }, { where: { id } });
