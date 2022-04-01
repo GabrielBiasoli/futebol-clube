@@ -63,7 +63,7 @@ const sumMatchsResults = (matchResults: MatchResult[]) => {
     goalsFavor: totalGoalsFavor,
     goalsOwn: totalGoalsOwn,
     goalsBalance: totalGoalsBalance,
-    efficienty: (totalPoints / (matchResults.length * 3)) * 100,
+    efficienty: ((totalPoints / (matchResults.length * 3)) * 100).toFixed(2),
   };
 };
 
