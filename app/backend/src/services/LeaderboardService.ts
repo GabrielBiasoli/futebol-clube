@@ -4,9 +4,9 @@ import * as ClubService from './ClubService';
 import * as MatchService from './MatchService';
 
 const filterMatchsByClub = (matchs: Match[], { id, clubName }: Club) => {
-  const clubMatchs = matchs.filter((match) => match.homeTeam === id || match.awayTeam === id);
+  const clubMatchs = matchs.filter((match) => match.homeTeam === id);
 
-  return { name: clubName, clubMatchs, id };
+  return { name: clubName, clubMatchs };
 };
 
 const getMatchResult = (goalsbalance: number) => {
@@ -26,12 +26,9 @@ interface MatchResult extends ClubGoals {
   loss: number,
 }
 
-const getMatchInfo = (clubMatchs: Match[], id: number): MatchResult[] => clubMatchs.map((match) => {
-  const [teamSide, opositeSide] = match.homeTeam === id
-    ? ['homeTeam', 'awayTeam']
-    : ['awayTeam', 'homeTeam'];
-  const goalsFavor = match[`${teamSide}Goals` as keyof Match];
-  const goalsOwn = match[`${opositeSide}Goals` as keyof Match];
+const getMatchInfo = (clubMatchs: Match[]): MatchResult[] => clubMatchs.map((match) => {
+  const goalsFavor = match.homeTeamGoals;
+  const goalsOwn = match.awayTeamGoals;
   const goalsBalance = goalsFavor - goalsOwn;
   const [victory, draw, loss] = getMatchResult(goalsBalance);
   return {
@@ -66,7 +63,7 @@ const sumMatchsResults = (matchResults: MatchResult[]) => {
     goalsFavor: totalGoalsFavor,
     goalsOwn: totalGoalsOwn,
     goalsBalance: totalGoalsBalance,
-    efficienty: Number((totalPoints / (matchResults.length * 3)) * 100).toFixed(2),
+    efficiency: +((totalPoints / (matchResults.length * 3)) * 100).toFixed(2),
   };
 };
 
@@ -79,16 +76,18 @@ interface ClubInfo extends ClubGoals {
   goalsFavor: number;
   goalsOwn: number;
   goalsBalance: number;
-  efficienty: string;
+  efficiency: number;
   name: string
 }
 
-export const getAll = async () => {
+export const getAllByHome = async () => {
   const clubs = await ClubService.getAll();
-  const matchs = await MatchService.getAll();
+  const matchs = await MatchService.getAllInProgress('false');
   const clubsWithMatchs = clubs.map((club) => filterMatchsByClub(matchs, club));
-  return clubsWithMatchs.map(({ clubMatchs, name, id }) => {
-    const matchInfo = getMatchInfo(clubMatchs, id);
+  console.log(clubsWithMatchs[0].clubMatchs);
+
+  return clubsWithMatchs.map(({ clubMatchs, name }) => {
+    const matchInfo = getMatchInfo(clubMatchs);
     const matchResultsSummed = sumMatchsResults(matchInfo);
     return {
       name,
@@ -98,18 +97,19 @@ export const getAll = async () => {
 };
 
 const orderClubs = (clubsStats: ClubInfo[]) => clubsStats.sort((a, b) => {
-  const aHasMorePoints = a.totalPoints > b.totalPoints;
-  if (aHasMorePoints) return 1;
-  if (!aHasMorePoints) return -1;
-  const aHasMoreVictories = a.totalVictories > b.totalVictories;
-  if (aHasMoreVictories) return 1;
-  if (!aHasMoreVictories) return -1;
-  const aHasMoreGoalsBalance = a.goalsBalance > b.goalsBalance;
-  if (aHasMoreGoalsBalance) return 1;
-  if (!aHasMoreGoalsBalance) return -1;
+  if (a.totalPoints > b.totalPoints) return -1;
+  if (a.totalPoints < b.totalPoints) return 1;
+  if (a.totalVictories > b.totalVictories) return -1;
+  if (a.totalVictories < b.totalVictories) return 1;
+  if (a.goalsBalance > b.goalsBalance) return -1;
+  if (a.goalsBalance < b.goalsBalance) return 1;
+  if (a.goalsFavor > b.goalsFavor) return -1;
+  if (a.goalsFavor < b.goalsFavor) return 1;
+  if (a.goalsOwn > b.goalsOwn) return -1;
+  if (a.goalsOwn < b.goalsOwn) return 1;
   return 0;
 });
-export const getAllOrdered = async () => {
-  const clubsStats = await getAll();
+export const getAllOrderedByHome = async () => {
+  const clubsStats = await getAllByHome();
   return orderClubs(clubsStats);
 };
