@@ -14,10 +14,13 @@ const getMatchResult = (goalsbalance: number) => {
   return goalsbalance === 0 ? [0, 1, 0] : [0, 0, 1];
 };
 
-interface MatchResult {
+interface ClubGoals {
   goalsFavor: number,
   goalsOwn: number,
   goalsBalance: number,
+}
+
+interface MatchResult extends ClubGoals {
   victory: number,
   draw: number,
   loss: number,
@@ -63,9 +66,19 @@ const sumMatchsResults = (matchResults: MatchResult[]) => {
     goalsFavor: totalGoalsFavor,
     goalsOwn: totalGoalsOwn,
     goalsBalance: totalGoalsBalance,
-    efficienty: ((totalPoints / (matchResults.length * 3)) * 100).toFixed(2),
+    efficienty: Number((totalPoints / (matchResults.length * 3)) * 100).toFixed(2),
   };
 };
+
+// interface ClubInfo extends ClubGoals {
+//   name: string,
+//   totalPoints: number,
+//   totalGames: number,
+//   totalVictories: number,
+//   totalDraws: number,
+//   totalLosses: number,
+//   efficienty: number
+// }
 
 export const getAllClubsWithInfo = async () => {
   const clubs = await ClubService.getAll();
@@ -79,6 +92,10 @@ export const getAllClubsWithInfo = async () => {
       ...matchResultsSummed,
     };
   });
+};
+
+const orderClubs = async () => {
+
 };
 
 export default getAllClubsWithInfo;
