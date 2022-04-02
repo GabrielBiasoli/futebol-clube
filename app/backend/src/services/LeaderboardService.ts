@@ -70,17 +70,20 @@ const sumMatchsResults = (matchResults: MatchResult[]) => {
   };
 };
 
-// interface ClubInfo extends ClubGoals {
-//   name: string,
-//   totalPoints: number,
-//   totalGames: number,
-//   totalVictories: number,
-//   totalDraws: number,
-//   totalLosses: number,
-//   efficienty: number
-// }
+interface ClubInfo extends ClubGoals {
+  totalPoints: number;
+  totalGames: number;
+  totalVictories: number;
+  totalDraws: number;
+  totalLosses: number;
+  goalsFavor: number;
+  goalsOwn: number;
+  goalsBalance: number;
+  efficienty: string;
+  name: string
+}
 
-export const getAllClubsWithInfo = async () => {
+export const getAll = async () => {
   const clubs = await ClubService.getAll();
   const matchs = await MatchService.getAll();
   const clubsWithMatchs = clubs.map((club) => filterMatchsByClub(matchs, club));
@@ -94,8 +97,19 @@ export const getAllClubsWithInfo = async () => {
   });
 };
 
-const orderClubs = async () => {
-
+const orderClubs = (clubsStats: ClubInfo[]) => clubsStats.sort((a, b) => {
+  const aHasMorePoints = a.totalPoints > b.totalPoints;
+  if (aHasMorePoints) return 1;
+  if (!aHasMorePoints) return -1;
+  const aHasMoreVictories = a.totalVictories > b.totalVictories;
+  if (aHasMoreVictories) return 1;
+  if (!aHasMoreVictories) return -1;
+  const aHasMoreGoalsBalance = a.goalsBalance > b.goalsBalance;
+  if (aHasMoreGoalsBalance) return 1;
+  if (!aHasMoreGoalsBalance) return -1;
+  return 0;
+});
+export const getAllOrdered = async () => {
+  const clubsStats = await getAll();
+  return orderClubs(clubsStats);
 };
-
-export default getAllClubsWithInfo;
