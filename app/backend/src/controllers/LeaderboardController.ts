@@ -1,19 +1,34 @@
 import { NextFunction, Request, Response } from 'express';
 import * as leaderboardService from '../services/LeaderboardService';
 
-export const getAllByHome = async (req: Request, res: Response, _next: NextFunction) => {
+require('express-async-errors');
+
+export const getAllByHome = async (
+  _req: Request,
+  res: Response,
+  _next: NextFunction,
+): Promise<Response> => {
   const clubsInfo = await leaderboardService.getAllOrderedByHome();
-  res.status(200).json(clubsInfo);
+
+  return res.status(200).json(clubsInfo);
 };
 
-export const getAllByAway = async (req: Request, res: Response, _next: NextFunction) => {
+export const getAllByAway = async (
+  _req: Request,
+  res: Response,
+  _next: NextFunction,
+): Promise<Response> => {
   const clubsInfo = await leaderboardService.getAllOrderedByAway();
-  res.status(200).json(clubsInfo);
+
+  return res.status(200).json(clubsInfo);
 };
 
-export const getAll = async (req: Request, res: Response, _next: NextFunction): Promise<void> => {
+export const getAll = async (
+  _req: Request,
+  res: Response,
+  _next: NextFunction,
+): Promise<Response> => {
   const clubsInfo = await leaderboardService.getAllOrdered();
-  res.status(200).json(clubsInfo);
-};
 
-export default getAllByHome;
+  return res.status(200).json(clubsInfo);
+};
