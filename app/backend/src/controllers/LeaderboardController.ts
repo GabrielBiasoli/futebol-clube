@@ -11,4 +11,9 @@ export const getAllByAway = async (req: Request, res: Response, _next: NextFunct
   res.status(200).json(clubsInfo);
 };
 
+export const getAll = async (req: Request, res: Response, _next: NextFunction) => {
+  const clubsInfo = await leaderboardService.getAllOrdered();
+  res.status(200).json(clubsInfo);
+};
+
 export default getAllByHome;

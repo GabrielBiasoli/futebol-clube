@@ -41,6 +41,7 @@ class App {
     this.app.get('/clubs/:id', ClubController.getById);
     this.app.get('/leaderboard/home', LeaderboardController.getAllByHome);
     this.app.get('/leaderboard/away', LeaderboardController.getAllByAway);
+    this.app.get('/leaderboard', LeaderboardController.getAll);
     this.app.use(domainError);
   }
 

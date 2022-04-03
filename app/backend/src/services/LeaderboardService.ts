@@ -21,20 +21,20 @@ const getMatchResult = (goalsbalance: number) => {
 };
 
 const getMatchInfo = (clubMatchs: Match[], id: number, side?: string): MatchResult[] => clubMatchs
-  .map((match) => {
+  .map(({ homeTeam, awayTeamGoals, homeTeamGoals }) => {
     let [goalsFavor, goalsOwn] = [0, 0];
     if (!side) {
-      [goalsFavor, goalsOwn] = match.homeTeam === id
-        ? [match.homeTeamGoals, match.awayTeam] : [match.awayTeamGoals, match.homeTeamGoals];
+      [goalsFavor, goalsOwn] = homeTeam === id ? [homeTeamGoals, awayTeamGoals]
+        : [awayTeamGoals, homeTeamGoals];
+    } else {
+      goalsFavor = side === 'home' ? homeTeamGoals : awayTeamGoals;
+      goalsOwn = side === 'home' ? awayTeamGoals : homeTeamGoals;
     }
-    goalsFavor = side === 'home' ? match.homeTeamGoals : match.awayTeamGoals;
-    goalsOwn = side === 'home' ? match.awayTeamGoals : match.homeTeamGoals;
-    const goalsBalance = goalsFavor - goalsOwn;
-    const [victory, draw, loss] = getMatchResult(goalsBalance);
+    const [victory, draw, loss] = getMatchResult(goalsFavor - goalsOwn);
     return {
       goalsFavor,
       goalsOwn,
-      goalsBalance,
+      goalsBalance: goalsFavor - goalsOwn,
       victory,
       draw,
       loss,
@@ -101,5 +101,10 @@ export const getAllOrderedByHome = async () => {
 
 export const getAllOrderedByAway = async () => {
   const clubStats = await getAllBySide('away');
+  return orderClubs(clubStats);
+};
+
+export const getAllOrdered = async () => {
+  const clubStats = await getAllBySide();
   return orderClubs(clubStats);
 };
