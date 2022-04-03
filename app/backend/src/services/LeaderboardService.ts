@@ -2,7 +2,7 @@ import Match from '../database/models/Match';
 import Club from '../database/models/Club';
 import * as ClubService from './ClubService';
 import * as MatchService from './MatchService';
-import { MatchResult, ClubInfo } from '../database/interfaces';
+import { MatchResult, ClubInfo } from '../interfaces';
 
 const filterMatchsByClub = (matchs: Match[], { id, clubName }: Club, side?: string) => {
   const clubMatchs = matchs.filter((match) => {

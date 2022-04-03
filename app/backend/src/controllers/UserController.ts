@@ -5,7 +5,7 @@ require('express-async-errors');
 
 const MISSING_FIELDS = new Error('MISSING_FIELDS');
 
-const validateLoginBody = (req: Request) => {
+const validateLoginBody = (req: Request): void => {
   if (!req.body.email || !req.body.password) throw MISSING_FIELDS;
 };
 

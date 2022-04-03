@@ -1,5 +1,5 @@
-import NewMatch from '../database/interfaces/NewMatch';
-import UpdateGoals from '../database/interfaces/UpdateGoals';
+import NewMatch from '../interfaces/NewMatch';
+import UpdateGoals from '../interfaces/UpdateGoals';
 import Club from '../database/models/Club';
 import * as ClubService from './ClubService';
 import Match from '../database/models/Match';
@@ -17,7 +17,8 @@ export const getAll = async () => {
         foreignKey: 'homeTeam',
         attributes: { exclude: ['id'] },
       },
-      { model: Club,
+      {
+        model: Club,
         as: 'awayClub',
         foreignKey: 'awayTeam',
         attributes: { exclude: ['id'] },
@@ -32,6 +33,7 @@ export const getAllInProgress = async (inProgress: string) => {
   const matchs = await getAll();
   const filteredMatchs = matchs
     .filter((match) => `${match.inProgress}` === inProgress);
+
   return filteredMatchs;
 };
 
@@ -46,12 +48,14 @@ const teamsExist = async (homeTeamId: number, awayTeamId: number) => {
 const validateNewMatch = async (newMatch: NewMatch) => {
   const { homeTeam, awayTeam } = newMatch;
   if (homeTeam === awayTeam) throw EQUAL_TEAMS;
+
   await teamsExist(homeTeam, awayTeam);
   if (!newMatch.inProgress) throw INVALID_INPROGRESS;
 };
 
 const getLastOne = async (): Promise<Match | null> => {
   const match = await Match.findOne({ order: [['id', 'DESC']] });
+
   return match;
 };
 
@@ -65,6 +69,7 @@ export const create = async (
   }: NewMatch,
 ): Promise<Match | null> => {
   const newMatchData = { homeTeam, awayTeam, homeTeamGoals, awayTeamGoals, inProgress };
+
   await validateNewMatch(newMatchData);
   await Match.create(newMatchData);
 
