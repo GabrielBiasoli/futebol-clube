@@ -17,6 +17,7 @@ const filterMatchsByClub = (matchs: Match[], { id, clubName }: Club, side?: stri
 
 const getMatchResult = (goalsbalance: number) => {
   if (goalsbalance > 0) return [1, 0, 0];
+
   return goalsbalance === 0 ? [0, 1, 0] : [0, 0, 1];
 };
 
@@ -31,6 +32,7 @@ const getMatchInfo = (clubMatchs: Match[], id: number, side?: string): MatchResu
       goalsOwn = side === 'home' ? awayTeamGoals : homeTeamGoals;
     }
     const [victory, draw, loss] = getMatchResult(goalsFavor - goalsOwn);
+
     return {
       goalsFavor,
       goalsOwn,
@@ -54,6 +56,7 @@ const sumMatchsResults = (matchResults: MatchResult[]) => {
   const totalDraws = matchResults.reduce((acc, { draw }) => acc + draw, 0);
   const totalLosses = matchResults.reduce((acc, { loss }) => acc + loss, 0);
   const totalPoints = getTotalPoints(totalVictories, totalDraws);
+
   return {
     totalPoints,
     totalGames: matchResults.length,
@@ -70,7 +73,9 @@ const sumMatchsResults = (matchResults: MatchResult[]) => {
 export const getAllBySide = async (side?: string) => {
   const clubs = await ClubService.getAll();
   const matchs = await MatchService.getAllInProgress('false');
+
   const clubsWithMatchs = clubs.map((club) => filterMatchsByClub(matchs, club, side));
+
   return clubsWithMatchs.map(({ clubMatchs, name, id }) => {
     const matchInfo = getMatchInfo(clubMatchs, id, side);
     const matchResultsSummed = sumMatchsResults(matchInfo);
@@ -92,19 +97,23 @@ const orderClubs = (clubsStats: ClubInfo[]) => clubsStats.sort((a, b) => {
   if (a.goalsFavor < b.goalsFavor) return 1;
   if (a.goalsOwn > b.goalsOwn) return -1;
   if (a.goalsOwn < b.goalsOwn) return 1;
+
   return 0;
 });
 export const getAllOrderedByHome = async () => {
   const clubsStats = await getAllBySide('home');
+
   return orderClubs(clubsStats);
 };
 
 export const getAllOrderedByAway = async () => {
   const clubStats = await getAllBySide('away');
+
   return orderClubs(clubStats);
 };
 
 export const getAllOrdered = async () => {
   const clubStats = await getAllBySide();
+
   return orderClubs(clubStats);
 };
