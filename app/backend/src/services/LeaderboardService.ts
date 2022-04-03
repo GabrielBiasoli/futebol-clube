@@ -4,10 +4,15 @@ import * as ClubService from './ClubService';
 import * as MatchService from './MatchService';
 import { MatchResult, ClubInfo } from '../database/interfaces';
 
-const filterMatchsByClub = (matchs: Match[], { id, clubName }: Club) => {
-  const clubMatchs = matchs.filter((match) => match.homeTeam === id);
+const filterMatchsByClub = (matchs: Match[], { id, clubName }: Club, side?: string) => {
+  const clubMatchs = matchs.filter((match) => {
+    const isHomeTeam = match.homeTeam === id;
+    const isAwayTeam = match.awayTeam === id;
+    if (side === undefined) return isHomeTeam || isAwayTeam;
+    return (side === 'home') ? isHomeTeam : isAwayTeam;
+  });
 
-  return { name: clubName, clubMatchs };
+  return { name: clubName, clubMatchs, id };
 };
 
 const getMatchResult = (goalsbalance: number) => {
@@ -15,20 +20,26 @@ const getMatchResult = (goalsbalance: number) => {
   return goalsbalance === 0 ? [0, 1, 0] : [0, 0, 1];
 };
 
-const getMatchInfo = (clubMatchs: Match[]): MatchResult[] => clubMatchs.map((match) => {
-  const goalsFavor = match.homeTeamGoals;
-  const goalsOwn = match.awayTeamGoals;
-  const goalsBalance = goalsFavor - goalsOwn;
-  const [victory, draw, loss] = getMatchResult(goalsBalance);
-  return {
-    goalsFavor,
-    goalsOwn,
-    goalsBalance,
-    victory,
-    draw,
-    loss,
-  } as MatchResult;
-});
+const getMatchInfo = (clubMatchs: Match[], id: number, side?: string): MatchResult[] => clubMatchs
+  .map((match) => {
+    let [goalsFavor, goalsOwn] = [0, 0];
+    if (!side) {
+      [goalsFavor, goalsOwn] = match.homeTeam === id
+        ? [match.homeTeamGoals, match.awayTeam] : [match.awayTeamGoals, match.homeTeamGoals];
+    }
+    goalsFavor = side === 'home' ? match.homeTeamGoals : match.awayTeamGoals;
+    goalsOwn = side === 'home' ? match.awayTeamGoals : match.homeTeamGoals;
+    const goalsBalance = goalsFavor - goalsOwn;
+    const [victory, draw, loss] = getMatchResult(goalsBalance);
+    return {
+      goalsFavor,
+      goalsOwn,
+      goalsBalance,
+      victory,
+      draw,
+      loss,
+    } as MatchResult;
+  });
 
 const getTotalPoints = (victories: number, draws: number): number => {
   const victoryPoints = victories * 3;
@@ -56,12 +67,12 @@ const sumMatchsResults = (matchResults: MatchResult[]) => {
   };
 };
 
-export const getAllByHome = async () => {
+export const getAllBySide = async (side?: string) => {
   const clubs = await ClubService.getAll();
   const matchs = await MatchService.getAllInProgress('false');
-  const clubsWithMatchs = clubs.map((club) => filterMatchsByClub(matchs, club));
-  return clubsWithMatchs.map(({ clubMatchs, name }) => {
-    const matchInfo = getMatchInfo(clubMatchs);
+  const clubsWithMatchs = clubs.map((club) => filterMatchsByClub(matchs, club, side));
+  return clubsWithMatchs.map(({ clubMatchs, name, id }) => {
+    const matchInfo = getMatchInfo(clubMatchs, id, side);
     const matchResultsSummed = sumMatchsResults(matchInfo);
     return {
       name,
@@ -84,6 +95,11 @@ const orderClubs = (clubsStats: ClubInfo[]) => clubsStats.sort((a, b) => {
   return 0;
 });
 export const getAllOrderedByHome = async () => {
-  const clubsStats = await getAllByHome();
+  const clubsStats = await getAllBySide('home');
   return orderClubs(clubsStats);
+};
+
+export const getAllOrderedByAway = async () => {
+  const clubStats = await getAllBySide('away');
+  return orderClubs(clubStats);
 };

@@ -39,7 +39,8 @@ class App {
     this.app.get('/login/validate', authenticateToken, UserController.getRole);
     this.app.get('/clubs', ClubController.getAll);
     this.app.get('/clubs/:id', ClubController.getById);
-    this.app.get('/leaderboard/home', LeaderboardController.getAllMatchsByClub);
+    this.app.get('/leaderboard/home', LeaderboardController.getAllByHome);
+    this.app.get('/leaderboard/away', LeaderboardController.getAllByAway);
     this.app.use(domainError);
   }
 
