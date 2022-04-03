@@ -2,6 +2,7 @@ import Match from '../database/models/Match';
 import Club from '../database/models/Club';
 import * as ClubService from './ClubService';
 import * as MatchService from './MatchService';
+import { MatchResult, ClubInfo } from '../database/interfaces';
 
 const filterMatchsByClub = (matchs: Match[], { id, clubName }: Club) => {
   const clubMatchs = matchs.filter((match) => match.homeTeam === id);
@@ -13,18 +14,6 @@ const getMatchResult = (goalsbalance: number) => {
   if (goalsbalance > 0) return [1, 0, 0];
   return goalsbalance === 0 ? [0, 1, 0] : [0, 0, 1];
 };
-
-interface ClubGoals {
-  goalsFavor: number,
-  goalsOwn: number,
-  goalsBalance: number,
-}
-
-interface MatchResult extends ClubGoals {
-  victory: number,
-  draw: number,
-  loss: number,
-}
 
 const getMatchInfo = (clubMatchs: Match[]): MatchResult[] => clubMatchs.map((match) => {
   const goalsFavor = match.homeTeamGoals;
@@ -67,25 +56,10 @@ const sumMatchsResults = (matchResults: MatchResult[]) => {
   };
 };
 
-interface ClubInfo extends ClubGoals {
-  totalPoints: number;
-  totalGames: number;
-  totalVictories: number;
-  totalDraws: number;
-  totalLosses: number;
-  goalsFavor: number;
-  goalsOwn: number;
-  goalsBalance: number;
-  efficiency: number;
-  name: string
-}
-
 export const getAllByHome = async () => {
   const clubs = await ClubService.getAll();
   const matchs = await MatchService.getAllInProgress('false');
   const clubsWithMatchs = clubs.map((club) => filterMatchsByClub(matchs, club));
-  console.log(clubsWithMatchs[0].clubMatchs);
-
   return clubsWithMatchs.map(({ clubMatchs, name }) => {
     const matchInfo = getMatchInfo(clubMatchs);
     const matchResultsSummed = sumMatchsResults(matchInfo);
