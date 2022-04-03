@@ -13,7 +13,6 @@ const authenticateToken = async (
   next: NextFunction,
 ): Promise<void> => {
   try {
-    console.log(req);
     const token = tokenExists(req.headers.authorization);
     const secret = await readSecret();
     const user = jwt.verify(token, secret);
